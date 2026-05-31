@@ -1,53 +1,71 @@
-import QtQuick 2.15
-import QtQuick.Layouts 1.15
-import Noctalia 1.0
+import QtQuick
+import Quickshell
+import Quickshell.Io
+import qs.Services.UI
 
 Item {
-    id: root
-    width: statusText.implicitWidth + 12
-    height: bar.height
+  id: root
 
-    property string status: "inactive"
+  // Required by Noctalia for bar widgets
+  // (these are read by the shell; other official bar widgets define them too)
+  property int sectionWidgetIndex: 0
+  property var pluginApi: null
 
-    Timer {
-        id: pollTimer
-        interval: 1000       // 1s
-        repeat: true
-        running: true
-        onTriggered: statusCheck.start()
-    }
+  // Our status
+  property string status: "inactive"
 
-    // Runs pgrep to check if wf-recorder is running
-    Process {
-        id: statusCheck
-        command: "sh"
-        arguments: ["-c", "pgrep -x wf-recorder >/dev/null && echo running || echo inactive"]
-        onFinished: {
-            var out = stdout.trim()
-            if (out === "running" || out === "inactive") {
-                root.status = out
-            }
+  // Process that checks if wf-recorder is running
+  Process {
+    id: statusProcess
+    // We’ll control .running from the timer
+    running: false
+    command: ["sh", "-c", "pgrep -x wf-recorder >/dev/null && echo running || echo inactive"]
+
+    stdout: StdioCollector {
+      onStreamFinished: {
+        const out = this.text.trim()
+        if (out === "running" || out === "inactive") {
+          root.status = out
         }
+      }
     }
+  }
 
-    RowLayout {
-        anchors.fill: parent
-        anchors.margins: 4
+  // Poll every second
+  Timer {
+    interval: 1000
+    repeat: true
+    running: true
+    triggeredOnStart: true
+    onTriggered: statusProcess.running = true
+  }
 
-        Text {
-            id: statusText
-            text: root.status
-            color: root.status === "running" ? palette.accent : palette.text
-            font.pixelSize: bar.font.pixelSize
-            verticalAlignment: Text.AlignVCenter
-        }
+  // Visible label in the bar
+  Text {
+    id: label
+    anchors.verticalCenter: parent.verticalCenter
+    text: root.status
+    color: root.status === "running"
+           ? Theme.palette.accent    // or pluginApi?.theme?.accent if you prefer
+           : Theme.palette.text
+  }
+
+  // Optional click: toggle or open something
+  MouseArea {
+    anchors.fill: parent
+    onClicked: {
+      // Example: show a toast when you click the widget
+      ToastService.showNotice(
+        root.status === "running"
+          ? pluginApi?.tr("wf-recorder.running")
+          : pluginApi?.tr("wf-recorder.inactive"),
+        "",
+        "screen-share"
+      )
     }
+  }
 
-    MouseArea {
-        anchors.fill: parent
-        onClicked: {
-            // Optional: open plugin settings or start/stop recording
-            // shell.execute("wf-recorder ...")
-        }
-    }
+  // Size: keep it tight to the text
+  implicitWidth: label.implicitWidth + 8
+  implicitHeight: label.implicitHeight
 }
