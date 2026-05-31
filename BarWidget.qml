@@ -5,33 +5,24 @@ import qs.Services.UI
 
 Item {
   id: root
-
-  // Required by Noctalia for bar widgets
-  // (these are read by the shell; other official bar widgets define them too)
   property int sectionWidgetIndex: 0
   property var pluginApi: null
 
-  // Our status
-  property string status: "inactive"
+  property bool recording: false
 
-  // Process that checks if wf-recorder is running
   Process {
     id: statusProcess
-    // We’ll control .running from the timer
     running: false
     command: ["sh", "-c", "pgrep -x wf-recorder >/dev/null && echo running || echo inactive"]
 
     stdout: StdioCollector {
       onStreamFinished: {
         const out = this.text.trim()
-        if (out === "running" || out === "inactive") {
-          root.status = out
-        }
+        root.recording = (out === "running")
       }
     }
   }
 
-  // Poll every second
   Timer {
     interval: 1000
     repeat: true
@@ -40,32 +31,63 @@ Item {
     onTriggered: statusProcess.running = true
   }
 
-  // Visible label in the bar
-  Text {
-    id: label
-    anchors.verticalCenter: parent.verticalCenter
-    text: root.status
-    color: root.status === "running"
-           ? Theme.palette.accent    // or pluginApi?.theme?.accent if you prefer
-           : Theme.palette.text
+  // Capsule container fills bar height; we animate opacity
+  Item {
+    id: container
+    anchors.fill: parent
+    opacity: root.recording ? 1 : 0
+
+    Behavior on opacity {
+      NumberAnimation {
+        duration: 150
+        easing.type: Easing.InOutQuad
+      }
+    }
+
+    // Capsule background, centered vertically
+    Rectangle {
+      id: capsule
+      height: Math.max(parent.height * 0.7, 16)  // 70% of bar height, min 16
+      width: height                               // pill-ish, can be wider if you prefer
+      radius: height / 2
+
+      anchors.verticalCenter: parent.verticalCenter
+      anchors.horizontalCenter: parent.horizontalCenter
+
+      // Background & border colors – you can swap for theme values
+      color: Qt.rgba(0, 0, 0, 0.25)               // translucent bg like other widgets
+      border.color: Qt.rgba(1, 1, 1, 0.35)        // light border
+      border.width: 1
+
+      // Red dot centered inside capsule
+      Rectangle {
+        id: dot
+        height: capsule.height * 0.45
+        width: height
+        radius: width / 2
+        color: "#ff4b4b"
+        anchors.centerIn: parent
+
+        scale: root.recording ? 1 : 0.4
+        Behavior on scale {
+          NumberAnimation {
+            duration: 150
+            easing.type: Easing.OutBack
+          }
+        }
+      }
+    }
+
   }
 
-  // Optional click: toggle or open something
-  MouseArea {
-    anchors.fill: parent
-    onClicked: {
-      // Example: show a toast when you click the widget
-      ToastService.showNotice(
-        root.status === "running"
-          ? pluginApi?.tr("wf-recorder.running")
-          : pluginApi?.tr("wf-recorder.inactive"),
-        "",
-        "screen-share"
-      )
+  // Push neighbors smoothly: width animates between 0 and capsule width
+  implicitWidth: root.recording ? (capsule.width + 6) : 0
+  implicitHeight: 0
+
+  Behavior on implicitWidth {
+    NumberAnimation {
+      duration: 150
+      easing.type: Easing.InOutQuad
     }
   }
-
-  // Size: keep it tight to the text
-  implicitWidth: label.implicitWidth + 8
-  implicitHeight: label.implicitHeight
 }
