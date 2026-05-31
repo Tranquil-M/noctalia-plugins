@@ -29,7 +29,7 @@ Installation is simple, and will only need to be done once.
      ```json
      "wf-recorder-indicator": {
           "enabled": true,
-          "sourceUrl": "https://github.com/Tranquil-M/noctalia-wf-recorder"
+          "sourceUrl": "https://github.com/Tranquil-M/wf-recorder-indicator"
       }
      ```
 3. Restart noctalia
