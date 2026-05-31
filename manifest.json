@@ -1,0 +1,16 @@
+{
+   "id": "wf-recorder-indicator",
+   "name": "wf-recorder Indicator",
+   "description": "Shows a red recording dot while wf-recorder is running",
+   "version": "1.0.0",
+   "main": "Main.qml",
+   "widgets": {
+      "bar": "BarWidget.qml"
+   },
+   "metadata": {
+      "defaultSettings": {
+            "hideInactive": true
+      }
+   }
+}
+
