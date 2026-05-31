@@ -1,88 +1,53 @@
-import QtQuick
-import QtQuick.Layouts
-import Quickshell
-import qs.Commons
-import qs.Services.UI
+import QtQuick 2.15
+import QtQuick.Layouts 1.15
+import Noctalia 1.0
 
 Item {
-   id: root
-   
-   property var pluginApi: null
-   
-   property ShellScreen screen
-   property string widgetId: ""
-   
-   readonly property var mainInstance:
-       pluginApi?.mainInstance
-   
-   property bool recorderActive:
-       mainInstance
-           ? mainInstance.wfRecorderActive
-           : false
-   
-   property var cfg:
-       pluginApi?.pluginSettings || ({})
-   
-   property var defaults:
-       pluginApi?.manifest?.metadata?.defaultSettings || ({})
-   
-   property bool hideInactive:
-       cfg.hideInactive
-           ?? defaults.hideInactive
-           ?? true
-   
-   readonly property bool isVisible:
-       !hideInactive || recorderActive
-   
-   implicitWidth: 24
-   implicitHeight: 24
-   
-   visible: isVisible
-   opacity: isVisible ? 1.0 : 0.0
-   
-   Rectangle {
-       anchors.centerIn: parent
-   
-       width: 12
-       height: 12
-       radius: 6
-   
-       color: "#ff3333"
-   
-       SequentialAnimation on opacity {
-           running: recorderActive
-           loops: Animation.Infinite
-   
-           NumberAnimation {
-               from: 1.0
-               to: 0.3
-               duration: 800
-           }
-   
-           NumberAnimation {
-               from: 0.3
-               to: 1.0
-               duration: 800
-           }
-       }
-   }
-   
-   MouseArea {
-       anchors.fill: parent
-       hoverEnabled: true
-   
-       onEntered: {
-           if (recorderActive) {
-               TooltipService.show(
-                   root,
-                   "wf-recorder is recording",
-                   BarService.getTooltipDirection()
-               );
-           }
-       }
-   
-       onExited: TooltipService.hide()
-   }
+    id: root
+    width: statusText.implicitWidth + 12
+    height: bar.height
 
+    property string status: "inactive"
+
+    Timer {
+        id: pollTimer
+        interval: 1000       // 1s
+        repeat: true
+        running: true
+        onTriggered: statusCheck.start()
+    }
+
+    // Runs pgrep to check if wf-recorder is running
+    Process {
+        id: statusCheck
+        command: "sh"
+        arguments: ["-c", "pgrep -x wf-recorder >/dev/null && echo running || echo inactive"]
+        onFinished: {
+            var out = stdout.trim()
+            if (out === "running" || out === "inactive") {
+                root.status = out
+            }
+        }
+    }
+
+    RowLayout {
+        anchors.fill: parent
+        anchors.margins: 4
+
+        Text {
+            id: statusText
+            text: root.status
+            color: root.status === "running" ? palette.accent : palette.text
+            font.pixelSize: bar.font.pixelSize
+            verticalAlignment: Text.AlignVCenter
+        }
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        onClicked: {
+            // Optional: open plugin settings or start/stop recording
+            // shell.execute("wf-recorder ...")
+        }
+    }
 }
-
