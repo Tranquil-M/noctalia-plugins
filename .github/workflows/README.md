@@ -2,7 +2,7 @@
 
 This directory contains automation scripts for maintaining the plugin registry.
 
-## update-registry.mjs
+## update-registry.js
 
 Automatically scans plugin directories and updates `registry.json` with current plugin metadata.
 
@@ -21,7 +21,7 @@ The script runs automatically via GitHub Actions when:
 - Changes are pushed to the `main` branch
 - Manually triggered via workflow dispatch
 
-See [`.github/workflows/update-registry.yml`](../.github/workflows/update-registry.yml) for workflow details.
+See [`.github/workflows/update-registry.yml`][githubworkflowsupdateregistryyml] for workflow details.
 
 ## Adding New Plugins
 
@@ -53,3 +53,5 @@ The registry extracts these fields from each plugin's manifest:
 - `license`
 
 Other manifest fields (like `entryPoints`, `dependencies`, `metadata`) are not included in the registry to keep it lightweight.
+
+[githubworkflowsupdateregistryyml]: ../.github/workflows/update-registry.yml
