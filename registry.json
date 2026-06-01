@@ -1,4 +1,16 @@
 {
   "version": 1,
-  "plugins": []
+  "plugins": [
+    {
+      "id": "wf-recorder-indicator",
+      "name": "wf-recorder Indicator",
+      "version": "1.0.0",
+      "author": "Tranquil-M",
+      "description": "Shows a red recording dot while wf-recorder is running",
+      "repository": "https://github.com/Tranquil-M/noctalia-plugins",
+      "minNoctaliaVersion": "3.6.0",
+      "license": "MIT",
+      "lastUpdated": "2026-06-01T16:28:54-07:00"
+    }
+  ]
 }
