@@ -9,6 +9,7 @@ This repository contains the code for custom noctalia plugins that I wrote to im
 | ------------- |:-------------:|
 | [What is it?](#dowhat) | What exactly is this? |
 | [Installation](#install) | How do I use this repository in my configuration? |
+| [Registry Automation](#regauto) | How is the registry updated? |
 | [Used Packages](#pkgs) | All packages used in this repo! |
 
 <a name="dowhat">
@@ -26,6 +27,15 @@ Installation is simple, and will only need to be done once.
 1. Open your settings panel and go to plugins.
 2. Add `https://github.com/Tranquil-M/noctalia-plugins` as a source.
 4. Enable the plugin and add it to your bar.
+
+## Registry Automation
+
+The plugin registry is automatically maintained using GitHub Actions:
+
+- **Automatic Updates**: Registry updates when manifest.json files are modified
+- **PR Validation**: Pull requests show if registry will be updated
+
+See [.github/workflows/README.md][githubworkflowsreadmemd] for technical details.
 
 <a name="pkgs">
   
