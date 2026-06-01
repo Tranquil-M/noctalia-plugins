@@ -38,13 +38,13 @@ The plugin registry is automatically maintained using GitHub Actions:
 - **Automatic Updates**: Registry updates when manifest.json files are modified
 - **PR Validation**: Pull requests show if registry will be updated
 
-See [.github/workflows/README.md][githubworkflowsreadmemd] for technical details.
+See [`.github/workflows/README.md`][githubworkflowsreadmemd] for technical details.
 
 <a name="availplug">
 
 ## Available Plugins
 
-Check [registry.json][registryjson] for the complete list of available plugins.
+Check [`registry.json`][registryjson] for the complete list of available plugins.
 
 <a name="pkgs">
   
