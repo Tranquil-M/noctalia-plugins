@@ -28,6 +28,8 @@ Installation is simple, and will only need to be done once.
 2. Add `https://github.com/Tranquil-M/noctalia-plugins` as a source.
 4. Enable the plugin and add it to your bar.
 
+<a name="regauto">
+
 ## Registry Automation
 
 The plugin registry is automatically maintained using GitHub Actions:
