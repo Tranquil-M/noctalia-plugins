@@ -6,6 +6,12 @@
    "version": "1.0.0",
    "license": "MIT",
    "repository": "https://github.com/Tranquil-M/noctalia-plugins",
+   "tags": [
+      "Panel",
+      "Utility",
+      "Indicator",
+      "Hyprland"
+   ]
    "entryPoints": {
       "barWidget": "BarWidget.qml"
    },
