@@ -4,6 +4,8 @@
    "author": "Tranquil-M",
    "description": "Shows a red recording dot while wf-recorder is running",
    "version": "1.0.0",
+   "license": "MIT",
+   "repository": "https://github.com/Tranquil-M/noctalia-plugins",
    "entryPoints": {
       "barWidget": "BarWidget.qml"
    },
