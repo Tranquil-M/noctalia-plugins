@@ -52,6 +52,8 @@ The registry extracts these fields from each plugin's manifest:
 - `minNoctaliaVersion`
 - `license`
 
+[githubworkflowsupdateregistryyml]: update-registry.yaml
+
 Other manifest fields (like `entryPoints`, `dependencies`, `metadata`) are not included in the registry to keep it lightweight.
 
 [githubworkflowsupdateregistryyml]: ../.github/workflows/update-registry.yml
