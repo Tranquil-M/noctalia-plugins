@@ -10,6 +10,7 @@ This repository contains the code for custom noctalia plugins that I wrote to im
 | [What is it?](#dowhat) | What exactly is this? |
 | [Installation](#install) | How do I use this repository in my configuration? |
 | [Registry Automation](#regauto) | How is the registry updated? |
+| [Available Plugins](#availplug) | All usable plugins! |
 | [Used Packages](#pkgs) | All packages used in this repo! |
 
 <a name="dowhat">
@@ -39,6 +40,12 @@ The plugin registry is automatically maintained using GitHub Actions:
 
 See [.github/workflows/README.md][githubworkflowsreadmemd] for technical details.
 
+<a name="availplug">
+
+## Available Plugins
+
+Check [registry.json][registryjson] for the complete list of available plugins.
+
 <a name="pkgs">
   
 # Packages
@@ -47,3 +54,6 @@ See [.github/workflows/README.md][githubworkflowsreadmemd] for technical details
 
 ---
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/I2I61Z3QJH)
+
+[githubworkflowsreadmemd]: .github/workflows/README.md
+[registryjson]: registry.json
