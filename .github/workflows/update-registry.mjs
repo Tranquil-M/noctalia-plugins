@@ -5,19 +5,19 @@
  *
  * Scans all plugin directories for manifest.json files and generates
  * an updated registry.json with plugin metadata.
- *
- * @license MIT
- * @copyright Noctalia devs
  */
 
-import fs from 'node:fs';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { execSync } from 'node:child_process';
+import { execSync } from 'child_process'
+import { existsSync, readFileSync, readdirSync, writeFileSync } from 'fs'
+import { dirname, join, resolve } from 'path'
+import { fileURLToPath } from 'url'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
 
 const REGISTRY_VERSION = 1;
-const ROOT_DIR = path.join(fileURLToPath(new URL(import.meta.url)), '..', '..', '..');
-const REGISTRY_PATH = path.join(ROOT_DIR, 'registry.json');
+const ROOT_DIR = join(__dirname, '..', '..');
+const REGISTRY_PATH = join(ROOT_DIR, 'registry.json');
 
 /**
  * Get the last commit date for a file using git
@@ -39,17 +39,17 @@ function getLastCommitDate(filePath) {
  * Check if a directory contains a valid plugin (has manifest.json)
  */
 function isPluginDirectory(dirPath) {
-  const manifestPath = path.join(dirPath, 'manifest.json');
-  return fs.existsSync(manifestPath);
+  const manifestPath = join(dirPath, 'manifest.json');
+  return existsSync(manifestPath);
 }
 
 /**
  * Read and parse a plugin's manifest.json
  */
 function readPluginManifest(dirPath) {
-  const manifestPath = path.join(dirPath, 'manifest.json');
+  const manifestPath = join(dirPath, 'manifest.json');
   try {
-    const content = fs.readFileSync(manifestPath, 'utf8');
+    const content = readFileSync(manifestPath, 'utf8');
     return JSON.parse(content);
   } catch (error) {
     console.error(`Error reading manifest from ${dirPath}:`, error.message);
@@ -60,18 +60,20 @@ function readPluginManifest(dirPath) {
 /**
  * Extract registry-relevant fields from a plugin manifest
  */
-export function extractRegistryEntry(manifest, dirPath) {
-  const manifestPath = path.join(dirPath, 'manifest.json');
+function extractRegistryEntry(manifest, dirPath) {
+  const manifestPath = join(dirPath, 'manifest.json');
   // Extract only the fields needed for the registry
   return {
     id: manifest.id,
     name: manifest.name,
     version: manifest.version,
+    official: manifest.official || false,
     author: manifest.author,
     description: manifest.description,
     repository: manifest.repository,
     minNoctaliaVersion: manifest.minNoctaliaVersion,
     license: manifest.license,
+    tags: manifest.tags || [],
     lastUpdated: getLastCommitDate(manifestPath)
   };
 }
@@ -79,10 +81,10 @@ export function extractRegistryEntry(manifest, dirPath) {
 /**
  * Scan the repository for plugin directories
  */
-export function scanPlugins() {
+function scanPlugins() {
   const plugins = [];
 
-  const items = fs.readdirSync(ROOT_DIR, { withFileTypes: true });
+  const items = readdirSync(ROOT_DIR, { withFileTypes: true });
 
   for (const item of items) {
     // Skip non-directories and hidden/special directories
@@ -91,7 +93,7 @@ export function scanPlugins() {
       continue;
     }
 
-    const dirPath = path.join(ROOT_DIR, item.name);
+    const dirPath = join(ROOT_DIR, item.name);
 
     if (isPluginDirectory(dirPath)) {
       const manifest = readPluginManifest(dirPath);
@@ -109,7 +111,7 @@ export function scanPlugins() {
 /**
  * Generate the registry.json content
  */
-export function generateRegistry(plugins) {
+function generateRegistry(plugins) {
   // Sort plugins by ID for consistent output
   plugins.sort((a, b) => a.id.localeCompare(b.id));
 
@@ -124,26 +126,37 @@ export function generateRegistry(plugins) {
  */
 function writeRegistry(registry) {
   const content = JSON.stringify(registry, null, 2) + '\n';
-  fs.writeFileSync(REGISTRY_PATH, content, 'utf8');
+  writeFileSync(REGISTRY_PATH, content, 'utf8');
 }
 
-// Run the script
-if (import.meta.main) {
+/**
+ * Main execution
+ */
+function main() {
+  console.log('Scanning for plugins...');
+
+  const plugins = scanPlugins();
+  if (plugins.length === 0) {
+    console.warn('No plugins found. Registry will be empty.');
+  }
+
+  const registry = generateRegistry(plugins);
+  writeRegistry(registry);
+
+  console.log(`Registry updated successfully at ${REGISTRY_PATH}`);
+  console.log(`Total Plugins: ${registry.plugins.length}`);
+}
+
+// Run the script when executed directly (not when imported)
+const isMain =
+  process.argv[1] && resolve(process.argv[1]) === resolve(__filename)
+if (isMain) {
   try {
-    console.log('Scanning for plugins...');
-
-    const plugins = scanPlugins();
-    if (plugins.length === 0) {
-      console.warn('No plugins found. Registry will be empty.');
-    }
-
-    const registry = generateRegistry(plugins);
-    writeRegistry(registry);
-
-    console.log(`Registry updated successfully at ${REGISTRY_PATH}`);
-    console.log(`Total Plugins: ${registry.plugins.length}`);
+    main()
   } catch (error) {
-    console.error('Error updating registry:', error);
-    process.exit(1);
+    console.error('Error updating registry:', error)
+    process.exit(1)
   }
 }
+
+export { scanPlugins, generateRegistry, extractRegistryEntry }
