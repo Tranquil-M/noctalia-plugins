@@ -1,17 +1,18 @@
 {
    "id": "wf-recorder-indicator",
    "name": "wf-recorder Indicator",
+   "version": "1.0.0",
    "author": "Tranquil-M",
    "description": "Shows a red recording dot while wf-recorder is running",
-   "version": "1.0.0",
-   "license": "MIT",
    "repository": "https://github.com/Tranquil-M/noctalia-plugins",
+   "minNoctaliaVersion": "3.6.0",
+   "license": "MIT",
    "tags": [
       "Panel",
       "Utility",
       "Indicator",
       "Hyprland"
-   ]
+   ],
    "entryPoints": {
       "barWidget": "BarWidget.qml"
    },
