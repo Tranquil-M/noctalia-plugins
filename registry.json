@@ -7,7 +7,7 @@
       "version": "1.0.0",
       "author": "Tranquil-M",
       "description": "Shows a red recording dot while wf-recorder is running",
-      "repository": "https://github.com/Tranquil-M/noctalia-plugins/tree/main/wf-recorder-indicator",
+      "repository": "https://github.com/Tranquil-M/noctalia-plugins",
       "minNoctaliaVersion": "3.6.0",
       "license": "MIT",
       "tags": [
@@ -16,7 +16,7 @@
         "Indicator",
         "Hyprland"
       ],
-      "lastUpdated": "2026-06-01T16:57:20-07:00"
+      "lastUpdated": "2026-06-01T17:26:54-07:00"
     }
   ]
 }
