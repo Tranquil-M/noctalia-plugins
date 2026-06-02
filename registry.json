@@ -10,6 +10,12 @@
       "repository": "https://github.com/Tranquil-M/noctalia-plugins/tree/main/wf-recorder-indicator",
       "minNoctaliaVersion": "3.6.0",
       "license": "MIT",
+      "tags": [
+        "Panel",
+        "Utility",
+        "Indicator",
+        "Hyprland"
+      ],
       "lastUpdated": "2026-06-01T16:57:20-07:00"
     }
   ]
