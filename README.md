@@ -52,7 +52,6 @@ Check [`registry.json`][registryjson] for the complete list of available plugins
 
 * [Noctalia](https://noctalia.dev/)
 
----
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/I2I61Z3QJH)
 
 [githubworkflowsreadmemd]: .github/workflows/README.md
