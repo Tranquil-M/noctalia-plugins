@@ -72,6 +72,7 @@ export function extractRegistryEntry(manifest, dirPath) {
     repository: manifest.repository,
     minNoctaliaVersion: manifest.minNoctaliaVersion,
     license: manifest.license,
+    tags: manifest.tags,
     lastUpdated: getLastCommitDate(manifestPath)
   };
 }
