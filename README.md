@@ -16,8 +16,8 @@ This repository contains the code for custom noctalia plugins that I wrote to im
 <a name="dowhat">
 
 ## What is it?
-This repository is a collection of plugins built for [noctalia](https://noctalia.dev/).
-This is also an extension of my [dotfiles](https://github.com/Tranquil-M/dots), and works perfectly in my project.
+This repository is a collection of plugins built for [`noctalia`](https://noctalia.dev/).
+This is also an extension of my [`dotfiles`](https://github.com/Tranquil-M/dots), and works perfectly in my project.
 
 <a name="install">
 
@@ -50,7 +50,7 @@ Check [`registry.json`][registryjson] for the complete list of available plugins
   
 # Packages
 
-* [Noctalia](https://noctalia.dev/)
+* [`Noctalia`](https://noctalia.dev/)
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/I2I61Z3QJH)
 
